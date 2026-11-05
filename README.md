@@ -4,8 +4,6 @@ A hands-on workshop from the Center for Geographic Analysis, Harvard University.
 
 **Workshop website and step-by-step instructions:** https://{{OWNER}}.github.io/{{REPO}}/
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/{{OWNER}}/{{REPO}}/blob/main/notebook/Spatial_AI_Workshop_Script.ipynb)
-
 ## Contents
 
 | Folder | What's inside |
