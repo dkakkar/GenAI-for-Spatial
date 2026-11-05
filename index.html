@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting Started with AI for Spatial Data</title>
+<meta name="description" content="Workshop instructions for Yale GIS Day: classify NYC 311 service requests with Gemma 4 in Google Colab, evaluate the labels and map the results.">
+<style>
+:root{
+  --teal:#1c7a86; --teal-dark:#145a63; --teal-soft:#e8f4f5;
+  --ink:#1f2328; --muted:#59636e; --line:#d8dee4; --bg:#ffffff; --panel:#f6f8fa;
+  --warn:#c5591a; --warn-soft:#fdf1e7; --code:#b3261e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --teal:#4fb3bf; --teal-dark:#7fcfd8; --teal-soft:#14343a;
+    --ink:#e6edf3; --muted:#9aa5b1; --line:#30363d; --bg:#0d1117; --panel:#161b22;
+    --warn:#f0883e; --warn-soft:#3a2416; --code:#ff9b8f;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--teal)} a:hover{color:var(--teal-dark)}
+header.hero{background:var(--teal);color:#fff;padding:48px 16px 40px}
+header.hero .wrap{max-width:1100px;margin:0 auto}
+header.hero h1{margin:0 0 8px;font-size:clamp(28px,4vw,40px);line-height:1.2}
+header.hero p{margin:4px 0;opacity:.95;max-width:760px}
+header.hero p.event{font-size:18px;font-weight:600;opacity:1}
+.buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.btn{display:inline-block;padding:10px 16px;border-radius:8px;background:#fff;color:var(--teal-dark);font-weight:600;text-decoration:none;border:2px solid #fff}
+.btn.ghost{background:transparent;color:#fff}
+.btn:hover{opacity:.9;color:var(--teal-dark)} .btn.ghost:hover{color:#fff}
+.layout{max-width:1100px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px}
+nav.toc{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:28px 0;font-size:14px}
+nav.toc strong{display:block;margin-bottom:8px;color:var(--muted);text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+nav.toc a{display:block;padding:4px 0 4px 10px;border-left:2px solid var(--line);color:var(--ink);text-decoration:none}
+nav.toc a:hover{border-left-color:var(--teal);color:var(--teal)}
+nav.toc a.sub{padding-left:22px;color:var(--muted)}
+main{padding:28px 0 64px;min-width:0}
+h2{font-size:26px;margin:48px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--teal);color:var(--teal-dark)}
+h2:first-child{margin-top:8px}
+h3{font-size:19px;margin:32px 0 8px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em;color:var(--code);background:var(--panel);padding:1px 5px;border-radius:4px;word-break:break-word}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow:auto}
+pre code{color:var(--ink);background:none;padding:0}
+ol,ul{padding-left:24px} li{margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--teal);color:#fff;font-weight:600}
+tr:nth-child(even) td{background:var(--panel)}
+.callout{border-left:4px solid var(--teal);background:var(--teal-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.callout b:first-child{color:var(--teal-dark)} .callout.warn b:first-child{color:var(--warn)}
+figure{margin:16px 0 24px}
+figure img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:8px;display:block}
+figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card .big{font-size:28px;font-weight:700;color:var(--teal)}
+.card .lbl{font-size:13px;color:var(--muted)}
+.files li{margin:6px 0}
+footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;color:var(--muted);font-size:14px}
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr;gap:0}
+  nav.toc{position:static;max-height:none;border-bottom:1px solid var(--line);padding:16px 0}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>Getting Started with AI for Spatial Data</h1>
+    <p class="event">Workshop Instructions · Yale GIS Day, November 16th</p>
+    <p>Devika Jain · Center for Geographic Analysis, Harvard University · <a href="mailto:kakkar@fas.harvard.edu" style="color:#fff">kakkar@fas.harvard.edu</a></p>
+    <div class="buttons">
+      <a class="btn" href="https://drive.google.com/drive/folders/1VYULWe1fjw92qhobaEvD2ekPursl2mse?usp=sharing">Open the workshop folder</a>
+      <a class="btn ghost" href="#before">Start with Part A</a>
+      <a class="btn ghost" href="#troubleshooting">Troubleshooting</a>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <strong>Contents</strong>
+  <a href="#overview">Overview</a>
+  <a class="sub" href="#covers">What the notebook covers</a>
+  <a href="#before">A. Before the workshop</a>
+  <a class="sub" href="#step1">1. Google account</a>
+  <a class="sub" href="#step2">2. Hugging Face account</a>
+  <a class="sub" href="#step3">3. Access token</a>
+  <a href="#start">B. Start of the workshop</a>
+  <a class="sub" href="#step4">4. Workshop folder</a>
+  <a class="sub" href="#step5">5. Open in Colab</a>
+  <a class="sub" href="#step6">6. Turn on the GPU</a>
+  <a class="sub" href="#step7">7. Add your token</a>
+  <a href="#run">C. Run the notebook</a>
+  <a class="sub" href="#settings">Install and settings</a>
+  <a class="sub" href="#connect">Connect Drive and HF</a>
+  <a class="sub" href="#part1">Parts 1–3</a>
+  <a class="sub" href="#sanity">Sanity check</a>
+  <a class="sub" href="#part4">Part 4: Prompts</a>
+  <a class="sub" href="#part5">Part 5: Evaluation</a>
+  <a class="sub" href="#part6">Part 6: Next steps</a>
+  <a href="#troubleshooting">D. Troubleshooting</a>
+</nav>
+
+<main>
+<h2 id="overview">Overview</h2>
+<p>In this workshop you will use <b>Gemma 4</b>, an open large language model (LLM) from Google, to classify one week of real <b>NYC 311 service requests</b> into themes. We will evaluate the results against the official complaint types and map the labels. Everything runs in your browser in <b>Google Colab</b>, with nothing to install on your laptop.</p>
+<table>
+<tr><th>Component</th><th>What it is</th><th>What you need</th></tr>
+<tr><td>Google Colab</td><td>Free browser-based Python notebooks with a GPU</td><td>A Google account</td></tr>
+<tr><td>Hugging Face (HF)</td><td>Hosts the Gemma 4 model and other open models</td><td>A free account and a Read access token (recommended)</td></tr>
+<tr><td>NYC Open Data</td><td>Source of the 311 service requests</td><td>Nothing: the notebook downloads the data</td></tr>
+<tr><td>Google Drive</td><td>Workshop folder <code>GenAI_Spatial_Workshop</code>: notebook, slides, these instructions</td><td><a href="https://drive.google.com/drive/folders/1VYULWe1fjw92qhobaEvD2ekPursl2mse?usp=sharing">Workshop Drive folder</a></td></tr>
+<tr><td>Notebook</td><td><code>Spatial_AI_Workshop_Script.ipynb</code></td><td>Opened in Colab with a T4 GPU</td></tr>
+</table>
+<div class="callout warn"><b>Important:</b> please complete <a href="#before">Part A (Steps 1–3)</a> before the workshop. Creating accounts takes about 10 minutes and is hard to do during the session.</div>
+<p><b>You will need:</b> a laptop with an up-to-date Chrome, Firefox or Safari browser and an internet connection. Basic Python familiarity (running cells, changing a value) is helpful but not required.</p>
+
+<h3 id="covers">What the notebook covers</h3>
+<table>
+<tr><th>Part</th><th>Topic</th><th>What you do</th></tr>
+<tr><td>1</td><td>Data</td><td>Download a week of NYC 311 requests and explore them</td></tr>
+<tr><td>2</td><td>Keyword Search</td><td>Classify requests into 7 themes with keyword search</td></tr>
+<tr><td>3</td><td>Load Gemma 4 from HF</td><td>Load the model from Hugging Face on the Colab GPU</td></tr>
+<tr><td>4</td><td>Prompt design</td><td>Five prompts, an ensemble and a retrieval-only baseline, all with constrained decoding</td></tr>
+<tr><td>5</td><td>Evaluation</td><td>Accuracy, macro F1, Cohen’s kappa, calibration and disagreements against the official complaint types; map of the labels</td></tr>
+<tr><td>6</td><td>Next Steps</td><td>Follow-up exercises</td></tr>
+</table>
+
+<h2 id="before">Part A: Before the workshop — account creation</h2>
+
+<h3 id="step1">Step 1. Create a Google account <small>(skip if you already have one)</small></h3>
+<p>Google Colab and Google Drive both use your Google account. A personal Gmail account works best; some university Google Workspace accounts have Colab turned off.</p>
+<ol>
+<li>Go to <a href="https://accounts.google.com/signup"><b>accounts.google.com/signup</b></a> (or click <b>Create account</b> on any Google sign-in page and choose <b>For my personal use</b>).</li>
+<li>Enter your <b>first and last name</b> and click <b>Next</b>.</li>
+<li>Enter your <b>date of birth</b> and <b>gender</b>, then click <b>Next</b>.</li>
+<li>Choose a <b>Gmail address</b> (or select <b>Use your existing email</b>) and click <b>Next</b>.</li>
+<li>Create a <b>password</b>, confirm it, and click <b>Next</b>.</li>
+<li>If asked, enter a <b>phone number</b> and type the verification code Google sends you.</li>
+<li>Review the recovery information, then read and <b>agree</b> to the Privacy and Terms.</li>
+<li>Check it worked: open <a href="https://colab.research.google.com"><b>colab.research.google.com</b></a>. You should see the Colab start page with your account icon in the top-right corner.</li>
+</ol>
+
+<h3 id="step2">Step 2. Create a Hugging Face account</h3>
+<p>Hugging Face hosts the Gemma 4 model that the notebook downloads.</p>
+<ol>
+<li>Go to <a href="https://huggingface.co/join"><b>huggingface.co/join</b></a>.</li>
+<li>Enter your <b>email address</b> and a <b>password</b>, then click <b>Next</b>.</li>
+<li>Choose a <b>username</b>, enter your <b>full name</b>, accept the Terms of Service and Code of Conduct, and click <b>Create Account</b>.</li>
+<li>Open the confirmation email from Hugging Face and <b>click the verification link</b>.</li>
+</ol>
+<div class="callout"><b>Tip:</b> Gemma 4 is released under the Apache 2.0 licence. If its model page (<a href="https://huggingface.co/google/gemma-4-E2B-it">huggingface.co/google/gemma-4-E2B-it</a>) shows a box asking you to agree to share your information or accept a licence, click the button to accept it with the same account. You must do this for the previous model, Gemma 3, if you switch to it.</div>
+
+<h3 id="step3">Step 3. Create a Hugging Face access token</h3>
+<p>A token lets the notebook download models as you rather than anonymously, which avoids download limits and is required for gated models.</p>
+<ol>
+<li>Click your profile picture (top-right) → <b>Settings</b> → <b>Access Tokens</b>, or go to <a href="https://huggingface.co/settings/tokens"><b>huggingface.co/settings/tokens</b></a>.</li>
+<li>Click <b>+ Create new token</b>.</li>
+<li>Choose the <b>Read</b> token type, name it (for example <b>Gemma</b>), and click <b>Create token</b> (Figure 1).</li>
+<li>Click <b>Copy</b> (Figure 2) and save the token somewhere private. <b>You will not be able to see it again</b> after closing the window — if you lose it, create a new one.</li>
+</ol>
+<figure><img src="images/hf_create_token.png" alt="Hugging Face Create new Access Token page with token type, name and Read-Only preset" loading="lazy"><figcaption>Figure 1. Hugging Face → Settings → Access Tokens → + Create new token.</figcaption></figure>
+<figure><img src="images/hf_copy_token.png" alt="Save your Access Token window with the Copy button; the token value is hidden" loading="lazy"><figcaption>Figure 2. Copy the token value (it starts with <code>hf_</code>). The value is hidden here on purpose.</figcaption></figure>
+<div class="callout warn"><b>Important:</b> treat your token like a password. Never paste it into a notebook cell, a chat, a slide or a screenshot. In Colab it goes <b>only</b> into the Secrets panel (Step 7). If a token is ever exposed, delete it on the Access Tokens page and create a new one.</div>
+
+<h2 id="start">Part B: Start of the workshop — open the notebook in Colab</h2>
+
+<h3 id="step4">Step 4. Open the workshop folder on Google Drive</h3>
+<ol>
+<li>Open the workshop folder <a href="https://drive.google.com/drive/folders/1VYULWe1fjw92qhobaEvD2ekPursl2mse?usp=sharing"><b>GenAI_Spatial_Workshop</b></a> (or scan the QR code on the slides). Make sure you are signed in to the Google account from Step 1.</li>
+<li>The folder contains <code>Spatial_AI_Workshop_Script.ipynb</code> (the notebook), the slides, these instructions and, as a backup, <code>nyc311_snapshot.csv</code> (the data, in case the NYC Open Data website is slow).</li>
+</ol>
+
+<h3 id="step5">Step 5. Open the notebook in Colab and save your own copy</h3>
+<ol>
+<li>Double-click <code>Spatial_AI_Workshop_Script.ipynb</code>, then click <b>Open with → Google Colaboratory</b> at the top of the preview.</li>
+<li>If Google Colaboratory is not listed: choose <b>Open with → Connect more apps</b>, search for <b>Colaboratory</b>, click <b>Install</b>, and try again.</li>
+<li>In Colab, click <b>File → Save a copy in Drive</b>. Work in the copy that opens (“Copy of Spatial_AI_Workshop_Script.ipynb” in <b>My Drive/Colab Notebooks</b>) so your changes are saved.</li>
+<li>If Colab warns that the notebook was not authored by Google, click <b>Run anyway</b> when you run the first cell.</li>
+</ol>
+
+<h3 id="step6">Step 6. Turn on the free GPU</h3>
+<ol>
+<li>Click <b>Runtime → Change runtime type</b>.</li>
+<li>Under <b>Hardware accelerator</b>, select <b>T4 GPU</b> and click <b>Save</b>.</li>
+<li>Click <b>Connect</b> (top-right). When connected you will see a green check mark and the <b>RAM / Disk</b> bars.</li>
+</ol>
+<div class="callout"><b>Tip:</b> if no GPU is available (free-tier limits), set <code>USE_LLM = False</code> in the Settings cell. Every part still runs, using offline stand-ins instead of the model, so you can follow along.</div>
+
+<h3 id="step7">Step 7. Add your Hugging Face token as a Colab secret</h3>
+<ol>
+<li>In the left sidebar of Colab, click the <b>key icon (Secrets)</b> (Figure 3).</li>
+<li>Click <b>+ Add new secret</b>.</li>
+<li>In <b>Name</b>, type exactly <code>HF_TOKEN</code> (capital letters, no spaces).</li>
+<li>In <b>Value</b>, paste the token from Step 3.</li>
+<li>Switch on the <b>Notebook access</b> toggle.</li>
+</ol>
+<figure><img src="images/colab_secrets.png" alt="Colab Secrets panel with the key icon, HF_TOKEN name and Notebook access toggle; the value is hidden" loading="lazy"><figcaption>Figure 3. Colab Secrets panel: key icon, Notebook access toggle and the <code>HF_TOKEN</code> name. The token value is hidden.</figcaption></figure>
+
+<h2 id="run">Part C: Run the notebook step by step</h2>
+<p>Run the cells <b>in order from top to bottom</b> with <b>Shift + Enter</b> (or the ▶ button). A green check mark appears when a cell finishes. If something goes wrong, use <b>Runtime → Restart session</b> and run the cells again from the top.</p>
+<table>
+<tr><th>Part</th><th>Typical time on a T4</th></tr>
+<tr><td>Install, settings, Drive, load data</td><td>3–5 minutes (data download runs once; it is cached on your Drive)</td></tr>
+<tr><td>Part 3: load Gemma 4 and sanity check</td><td>2–5 minutes the first time (model download), plus under a minute for the check</td></tr>
+<tr><td>Part 4: four prompts on 1,000 requests</td><td>About 14 minutes for the four default prompts (<code>P4_geo_context</code> adds about 8 more); only unique prompts are scored, and results are cached on Drive</td></tr>
+<tr><td>Part 5</td><td>About 1 minute</td></tr>
+</table>
+<p>These are estimates; Colab GPU speed varies. Each prompt in Part 4 prints its own run time.</p>
+
+<h3 id="settings">Install and settings</h3>
+<p>The first cell installs a few extra libraries (about 1 minute). If Colab asks you to <b>Restart the session</b>, click it and continue with the next cell. The <b>Settings</b> cell controls the model and data:</p>
+<figure><img src="images/settings_cell.png" alt="The Settings cell of the notebook" loading="lazy"></figure>
+<table>
+<tr><th>Setting</th><th>Default</th><th>What it does</th></tr>
+<tr><td><code>USE_LLM</code></td><td><code>True</code></td><td><code>False</code> runs every part without a model (no GPU needed)</td></tr>
+<tr><td><code>MODEL_NAME</code></td><td><code>google/gemma-4-E2B-it</code></td><td>Gemma 4 E2B fits a free T4. E4B is stronger but needs <code>LOAD_IN_4BIT = True</code> on a T4</td></tr>
+<tr><td><code>FAST_FP16</code></td><td><code>False</code></td><td>Keep <code>False</code>. The model runs in bfloat16, which is reliable. float16 is faster on a T4 but can give invalid numbers with Gemma</td></tr>
+<tr><td><code>CALIBRATE</code></td><td><code>True</code></td><td>Removes the model’s built-in preference for some answer letters (for example A)</td></tr>
+<tr><td><code>BATCH_SIZE</code></td><td><code>16</code></td><td>Prompts processed together; halved automatically if the GPU runs out of memory</td></tr>
+<tr><td><code>START_DATE</code>, <code>END_DATE</code></td><td>one week</td><td>Which week of 311 requests to download</td></tr>
+<tr><td><code>N_REQUESTS</code></td><td><code>1000</code></td><td>Size of the random sample analysed</td></tr>
+</table>
+
+<h3 id="connect">Connect to Google Drive and Hugging Face</h3>
+<p>A pop-up asks <b>Permit this notebook to access your Google Drive files?</b> Click <b>Connect to Google Drive</b>, choose your account, tick <b>Select all</b> and click <b>Continue</b>. Colab may also ask “Grant access to HF_TOKEN?” — click <b>Grant access</b>. The cell prints the Drive folder where data and results are saved (<code>MyDrive/Colab Notebooks/GenAI_Spatial_Workshop</code>).</p>
+<figure><img src="images/drive_permission.png" alt="Colab pop-up: Permit this notebook to access your Google Drive files? with the Connect to Google Drive button" loading="lazy"><figcaption>Click <b>Connect to Google Drive</b>.</figcaption></figure>
+<figure><img src="images/drive_signin.png" alt="Google sign-in window for Google Drive with Continue button" loading="lazy"><figcaption>Choose your account and click <b>Continue</b>.</figcaption></figure>
+
+<h3 id="part1">Part 1: Data</h3>
+<ul>
+<li>Downloads one week of 311 requests from NYC Open Data and saves a copy to your Drive. Street addresses are deliberately not downloaded.</li>
+<li>If the download fails, copy <code>nyc311_snapshot.csv</code> from the workshop folder into <code>MyDrive/Colab Notebooks/GenAI_Spatial_Workshop</code> and run the cell again.</li>
+<li>Builds the text the model reads (the descriptor and location type, e.g. “Banging/Pounding; location: Residential Building/House”) and maps each official complaint type to one of 7 themes: Noise; Housing &amp; Buildings; Streets, Traffic &amp; Parking; Sanitation &amp; Cleanliness; Trees, Parks &amp; Environment; Homelessness &amp; Public Safety; Business &amp; Consumer. These official themes are the answer key.</li>
+<li>Shows requests by borough, the top complaint types, requests by hour and a clustered point map.</li>
+</ul>
+
+<h3 id="part2">Part 2: Keyword baseline</h3>
+<p>A simple rule-based classifier that looks for words such as “parking” or “mold”. It is the benchmark the LLM has to beat.</p>
+
+<h3 id="part3">Part 3: Load Gemma 4</h3>
+<p>Downloads and loads the model. Check that the output shows <code>GPU: Tesla T4</code> and <code>Precision: bfloat16</code>. The cell ends with a one-sentence test answer from the model.</p>
+
+<h3 id="sanity">Sanity check (end of Part 3)</h3>
+<p>Before classifying 1,000 requests, the notebook scores seven obvious requests, one per theme, and shows a table with the expected theme, the scored theme, the confidence and the model’s free-text reply.</p>
+<ul>
+<li><b>“OK: 6/7 correct” or better:</b> continue to Part 4.</li>
+<li><b>“WARNING: only N/7 correct”:</b> stop. Part 4 would give near-random labels. Check that <code>FAST_FP16 = False</code>, then <b>Runtime → Restart session</b> and run from the top. If it still fails, look at the <code>free_reply</code> column and ask the instructor.</li>
+</ul>
+
+<h3 id="part4">Part 4: Prompt design (constrained decoding)</h3>
+<p>The themes are listed as letters A–G. The notebook starts the model’s reply with “Answer:” and reads the probability of each letter as the next word. The answer is always a valid theme, it comes with a confidence score, and it is much faster than generating text. With <code>CALIBRATE = True</code>, each prompt is also scored once with an empty request (“N/A”) to remove the model’s built-in preference for some letters.</p>
+<table>
+<tr><th>Method</th><th>Strategy</th></tr>
+<tr><td><code>P1_zero_shot</code></td><td>Plain instruction with the list of themes</td></tr>
+<tr><td><code>P2_definitions</code></td><td>Adds a precise definition of every theme</td></tr>
+<tr><td><code>P3_few_shot</code></td><td>Definitions plus 14 real example requests</td></tr>
+<tr><td><code>P4_geo_context</code></td><td>Definitions plus the borough and time of day (not run by default: it takes about 8 minutes)</td></tr>
+<tr><td><code>P5_retrieval</code></td><td>Definitions plus the 8 most similar past requests and their correct themes (from the rest of the week, not the evaluation sample)</td></tr>
+<tr><td><code>ENSEMBLE</code></td><td>Average of the P2, P3 and P5 probabilities</td></tr>
+<tr><td><code>kNN_vote</code></td><td>The 8 similar requests vote, with no LLM: a check that the model adds value</td></tr>
+</table>
+<figure><img src="images/prompts_cell.png" alt="The PROMPTS dictionary and RUN_PROMPTS setting in the notebook" loading="lazy"></figure>
+<div class="callout"><b>Tip:</b> by default <code>RUN_PROMPTS</code> runs four prompts and skips <code>P4_geo_context</code> to save time; use <code>RUN_PROMPTS = list(PROMPTS)</code> to run all five. Short on time? Set <code>RUN_PROMPTS = ["P2_definitions", "P5_retrieval"]</code>. If you see “GPU memory full: lowering the batch size”, the notebook is recovering by itself; just let it continue.</div>
+<p>The last cell of Part 4 asks the model for free-text answers on 40 requests, to show why parsing free text is less reliable than constrained answers.</p>
+
+<h3 id="part5">Part 5: Evaluation</h3>
+<p>In our test run (Gemma 4 E2B, 1,000 requests, all five prompts), the sanity check scored 7/7 and the four default prompts took about 14 minutes. Your numbers should be close:</p>
+<div class="cards">
+  <div class="card"><div class="big">97%</div><div class="lbl">P5_retrieval accuracy (kappa 0.97)</div></div>
+  <div class="card"><div class="big">96%</div><div class="lbl">kNN_vote (no LLM)</div></div>
+  <div class="card"><div class="big">91%</div><div class="lbl">Ensemble</div></div>
+  <div class="card"><div class="big">74%</div><div class="lbl">Keyword search</div></div>
+</div>
+<ul>
+<li><b>Accuracy, macro F1 and Cohen’s kappa</b> for every method against the official themes, with a majority-class baseline.</li>
+<li><b>Confusion matrix</b> for the best method: which themes get mixed up.</li>
+<li><b>Calibration:</b> is the model right as often as it is confident? And the trade-off of accepting only confident answers.</li>
+<li><b>Disagreements</b> to review by hand. Some are model errors; others show that the official categories or our theme map are debatable.</li>
+<li><b>Map of the labels:</b> every request coloured by its LLM theme, plus the share of each theme by borough. Set <code>MAP_COL = "official_theme"</code> to compare with the official labels.</li>
+</ul>
+
+<h3 id="part6">Part 6: Next steps — try it yourself</h3>
+<ul>
+<li>Write a new prompt in <code>PROMPTS</code> (e.g. <code>"P6_my_prompt"</code>), add it to <code>RUN_PROMPTS</code> and rerun Parts 4–5. Can you beat the ensemble?</li>
+<li>Switch <code>MODEL_NAME</code> to <code>google/gemma-4-E4B-it</code> with <code>LOAD_IN_4BIT = True</code>. How do accuracy, calibration and run time change?</li>
+<li>In the map at the end of Part 5, set <code>MAP_COL = "official_theme"</code>. Where do the LLM and official labels disagree?</li>
+<li>Run all five prompts with <code>RUN_PROMPTS = list(PROMPTS)</code>. Does adding the borough and time of day (<code>P4_geo_context</code>) help?</li>
+</ul>
+
+<h2 id="troubleshooting">Part D: Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>Fix</th></tr>
+<tr><td>“CUDA out of memory” or the session crashes</td><td>Runtime → Restart session and run from the top. The notebook halves the batch size automatically; you can also set <code>BATCH_SIZE = 8</code>. Use E2B, not E4B, on a T4.</td></tr>
+<tr><td><code>GPU: none – switch to a T4 runtime</code></td><td>Runtime → Change runtime type → T4 GPU → Save, then rerun from the top. If no GPU is available, set <code>USE_LLM = False</code>.</td></tr>
+<tr><td>401 / 403 or “gated repo” error when loading the model</td><td>Check the <code>HF_TOKEN</code> secret (Step 7) and accept the model’s licence on its Hugging Face page with the same account.</td></tr>
+<tr><td>311 download fails or is very slow</td><td>Copy <code>nyc311_snapshot.csv</code> from the workshop folder to <code>MyDrive/Colab Notebooks/GenAI_Spatial_Workshop</code> and rerun the data cell.</td></tr>
+<tr><td>Part 4 is slow</td><td>Keep <code>N_REQUESTS = 1000</code>, run fewer prompts (<code>RUN_PROMPTS</code>), and do not re-run cells unnecessarily (results are cached).</td></tr>
+<tr><td>Sanity check shows “WARNING: only N/7 correct”</td><td>Set <code>FAST_FP16 = False</code>, Runtime → Restart session, and run from the top. Do not continue to Part 4 until the check passes.</td></tr>
+<tr><td>“N prompts gave invalid numbers; re-scoring them one at a time”</td><td>Nothing to do: the notebook retries them. If a WARNING follows, set <code>FAST_FP16 = False</code> and restart the session.</td></tr>
+<tr><td>Almost every request is labelled Noise (or one other theme)</td><td>The scores are not valid. Restart the session with <code>FAST_FP16 = False</code> and check the sanity check before Part 4.</td></tr>
+<tr><td>Colab disconnected</td><td>Reconnect and run from the top. Data and Part 4 results load from your Drive cache.</td></tr>
+<tr><td>Colab will not open with your university account</td><td>Use a personal Gmail account (Step 1).</td></tr>
+</table>
+<p>By the end of the workshop you’ll be able to combine LLMs with spatial data, from classification and evaluation to mapping the results.</p>
+</main>
+</div>
+<footer>Getting Started with AI for Spatial Data · Yale GIS Day, November 16th · Devika Jain, Center for Geographic Analysis, Harvard University</footer>
+</body>
+</html>
