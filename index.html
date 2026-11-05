@@ -72,12 +72,8 @@ footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;colo
   <div class="wrap">
     <h1>Getting Started with AI for Spatial Data</h1>
     <p class="event">Workshop Instructions · Yale GIS Day, November 16th</p>
+    <p> </p>
     <p>Devika Jain · Center for Geographic Analysis, Harvard University · <a href="mailto:kakkar@fas.harvard.edu" style="color:#fff">kakkar@fas.harvard.edu</a></p>
-    <div class="buttons">
-      <a class="btn" href="https://drive.google.com/drive/folders/1VYULWe1fjw92qhobaEvD2ekPursl2mse?usp=sharing">Open the workshop folder</a>
-      <a class="btn ghost" href="#before">Start with Part A</a>
-      <a class="btn ghost" href="#troubleshooting">Troubleshooting</a>
-    </div>
   </div>
 </header>
 
@@ -85,7 +81,6 @@ footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;colo
 <nav class="toc" aria-label="Contents">
   <strong>Contents</strong>
   <a href="#overview">Overview</a>
-  <a class="sub" href="#covers">What the notebook covers</a>
   <a href="#before">A. Before the workshop</a>
   <a class="sub" href="#step1">1. Google account</a>
   <a class="sub" href="#step2">2. Hugging Face account</a>
@@ -164,8 +159,8 @@ footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;colo
 <li>Choose the <b>Read</b> token type, name it (for example <b>Gemma</b>), and click <b>Create token</b> (Figure 1).</li>
 <li>Click <b>Copy</b> (Figure 2) and save the token somewhere private. <b>You will not be able to see it again</b> after closing the window — if you lose it, create a new one.</li>
 </ol>
-<figure><img src="images/hf_create_token.png" alt="Hugging Face Create new Access Token page with token type, name and Read-Only preset" loading="lazy"><figcaption>Figure 1. Hugging Face → Settings → Access Tokens → + Create new token.</figcaption></figure>
-<figure><img src="images/hf_copy_token.png" alt="Save your Access Token window with the Copy button; the token value is hidden" loading="lazy"><figcaption>Figure 2. Copy the token value (it starts with <code>hf_</code>). The value is hidden here on purpose.</figcaption></figure>
+<figure><img src="images/HF_Access_1.png" alt="Hugging Face Create new Access Token page with token type, name and Read-Only preset" loading="lazy"><figcaption>Figure 1. Hugging Face → Settings → Access Tokens → + Create new token.</figcaption></figure>
+<figure><img src="images/HF_Access_2.png" alt="Save your Access Token window with the Copy button; the token value is hidden" loading="lazy"><figcaption>Figure 2. Copy the token value (it starts with <code>hf_</code>). The value is hidden here on purpose.</figcaption></figure>
 <div class="callout warn"><b>Important:</b> treat your token like a password. Never paste it into a notebook cell, a chat, a slide or a screenshot. In Colab it goes <b>only</b> into the Secrets panel (Step 7). If a token is ever exposed, delete it on the Access Tokens page and create a new one.</div>
 
 <h2 id="start">Part B: Start of the workshop — open the notebook in Colab</h2>
@@ -200,7 +195,7 @@ footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;colo
 <li>In <b>Value</b>, paste the token from Step 3.</li>
 <li>Switch on the <b>Notebook access</b> toggle.</li>
 </ol>
-<figure><img src="images/colab_secrets.png" alt="Colab Secrets panel with the key icon, HF_TOKEN name and Notebook access toggle; the value is hidden" loading="lazy"><figcaption>Figure 3. Colab Secrets panel: key icon, Notebook access toggle and the <code>HF_TOKEN</code> name. The token value is hidden.</figcaption></figure>
+<figure><img src="images/HF_Token.png" alt="Colab Secrets panel with the key icon, HF_TOKEN name and Notebook access toggle; the value is hidden" loading="lazy"><figcaption>Figure 3. Colab Secrets panel: key icon, Notebook access toggle and the <code>HF_TOKEN</code> name. The token value is hidden.</figcaption></figure>
 
 <h2 id="run">Part C: Run the notebook step by step</h2>
 <p>Run the cells <b>in order from top to bottom</b> with <b>Shift + Enter</b> (or the ▶ button). A green check mark appears when a cell finishes. If something goes wrong, use <b>Runtime → Restart session</b> and run the cells again from the top.</p>
@@ -215,7 +210,7 @@ footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;colo
 
 <h3 id="settings">Install and settings</h3>
 <p>The first cell installs a few extra libraries (about 1 minute). If Colab asks you to <b>Restart the session</b>, click it and continue with the next cell. The <b>Settings</b> cell controls the model and data:</p>
-<figure><img src="images/settings_cell.png" alt="The Settings cell of the notebook" loading="lazy"></figure>
+<figure><img src="images/install_settings.png" alt="The Settings cell of the notebook" loading="lazy"></figure>
 <table>
 <tr><th>Setting</th><th>Default</th><th>What it does</th></tr>
 <tr><td><code>USE_LLM</code></td><td><code>True</code></td><td><code>False</code> runs every part without a model (no GPU needed)</td></tr>
@@ -229,8 +224,8 @@ footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;colo
 
 <h3 id="connect">Connect to Google Drive and Hugging Face</h3>
 <p>A pop-up asks <b>Permit this notebook to access your Google Drive files?</b> Click <b>Connect to Google Drive</b>, choose your account, tick <b>Select all</b> and click <b>Continue</b>. Colab may also ask “Grant access to HF_TOKEN?” — click <b>Grant access</b>. The cell prints the Drive folder where data and results are saved (<code>MyDrive/Colab Notebooks/GenAI_Spatial_Workshop</code>).</p>
-<figure><img src="images/drive_permission.png" alt="Colab pop-up: Permit this notebook to access your Google Drive files? with the Connect to Google Drive button" loading="lazy"><figcaption>Click <b>Connect to Google Drive</b>.</figcaption></figure>
-<figure><img src="images/drive_signin.png" alt="Google sign-in window for Google Drive with Continue button" loading="lazy"><figcaption>Choose your account and click <b>Continue</b>.</figcaption></figure>
+<figure><img src="images/Google_Drive_Access.png" alt="Colab pop-up: Permit this notebook to access your Google Drive files? with the Connect to Google Drive button" loading="lazy"><figcaption>Click <b>Connect to Google Drive</b>.</figcaption></figure>
+<figure><img src="images/Google_Drive_Access_2.png" alt="Google sign-in window for Google Drive with Continue button" loading="lazy"><figcaption>Choose your account and click <b>Continue</b>.</figcaption></figure>
 
 <h3 id="part1">Part 1: Data</h3>
 <ul>
@@ -265,7 +260,7 @@ footer{border-top:1px solid var(--line);padding:24px 16px;text-align:center;colo
 <tr><td><code>ENSEMBLE</code></td><td>Average of the P2, P3 and P5 probabilities</td></tr>
 <tr><td><code>kNN_vote</code></td><td>The 8 similar requests vote, with no LLM: a check that the model adds value</td></tr>
 </table>
-<figure><img src="images/prompts_cell.png" alt="The PROMPTS dictionary and RUN_PROMPTS setting in the notebook" loading="lazy"></figure>
+<figure><img src="images/prompts.png" alt="The PROMPTS dictionary and RUN_PROMPTS setting in the notebook" loading="lazy"></figure>
 <div class="callout"><b>Tip:</b> by default <code>RUN_PROMPTS</code> runs four prompts and skips <code>P4_geo_context</code> to save time; use <code>RUN_PROMPTS = list(PROMPTS)</code> to run all five. Short on time? Set <code>RUN_PROMPTS = ["P2_definitions", "P5_retrieval"]</code>. If you see “GPU memory full: lowering the batch size”, the notebook is recovering by itself; just let it continue.</div>
 <p>The last cell of Part 4 asks the model for free-text answers on 40 requests, to show why parsing free text is less reliable than constrained answers.</p>
 
