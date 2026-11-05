@@ -2,7 +2,7 @@
 
 A hands-on workshop from the Center for Geographic Analysis, Harvard University. You classify one week of real **NYC 311 service requests** with **Gemma 4** (an open large language model) in Google Colab, evaluate the labels against the official complaint types, and map the results.
 
-**Workshop website and step-by-step instructions:** https://{{OWNER}}.github.io/{{REPO}}/
+**Workshop website and step-by-step instructions:** [https://{{OWNER}}.github.io/{{REPO}}/](https://dkakkar.github.io/GenAI-for-Spatial/)
 
 ## Contents
 
@@ -10,7 +10,6 @@ A hands-on workshop from the Center for Geographic Analysis, Harvard University.
 |---|---|
 | `notebook/` | `Spatial_AI_Workshop_Script.ipynb`, the workshop notebook (runs in Google Colab on a free T4 GPU) |
 | `slides/` | The presentation (PowerPoint and PDF) |
-| `instructions/` | Participant instructions (Word and PDF) |
 | `data/` | `nyc311_snapshot.csv`, a backup of the 311 data in case NYC Open Data is unavailable |
 | `docs/` | The workshop website (GitHub Pages) |
 
