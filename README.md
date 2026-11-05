@@ -1,6 +1,6 @@
 # Getting Started with AI for Spatial Data
 
-A hands-on workshop from the Center for Geographic Analysis, Harvard University. You classify one week of real **NYC 311 service requests** with **Gemma 4** (an open large language model) in Google Colab, evaluate the labels against the official complaint types, and map the results.
+A hands-on workshop where you classify one week of real **NYC 311 service requests** with **Gemma 4** (an open large language model from **Hugging Face**) in Google Colab, evaluate the labels against the official complaint types, and map the results.
 
 [**Workshop Website**](https://dkakkar.github.io/GenAI-for-Spatial/)
 
@@ -15,8 +15,8 @@ A hands-on workshop from the Center for Geographic Analysis, Harvard University.
 
 ## What you need
 
-- A Google account (for Colab and Google Drive)
-- A Hugging Face account and a Read access token (recommended)
+- A **Google account** (for Colab and Google Drive)
+- A **Hugging Face** account and a Read access token (recommended)
 - A laptop with a web browser. Nothing to install.
 
 ## Test-run results
